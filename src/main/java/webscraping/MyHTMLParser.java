@@ -31,6 +31,8 @@ public class MyHTMLParser{
 				// TODO Auto-generated catch block
 				System.out.println("Error occured while connecting to url!");
 				e.printStackTrace();
+			} catch (Exception e) {
+				System.out.println("Connection exception!!");
 			}
 			
 		}

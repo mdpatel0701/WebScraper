@@ -1,69 +1,82 @@
 package webscraping;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class WebContentOperationService implements WebContentOperationServiceInterface{
 
-//	private String pageContent = null;
-//
-//	public WebContentOperationService(String pageContent) {
-//		super();
-//		this.pageContent = pageContent;
-//	}
-	
-
+	/* To get Word List with Word Frequency from Website content*/
 	@Override
-	public Map<String,Integer> getWordList(String inputString) {
+	public Map<String,Integer> getWordMap(String inputString) {
 		// TODO Auto-generated method stub
-		//List<String> pageContent = new ArrayList<String>();
-		 int count=0;
-		 
+		 int count = 0;
 		 Pattern p = Pattern.compile("[a-zA-Z]+");
 		 Matcher matcher = p.matcher(inputString);
 		 Map<String, Integer> wordMap = new HashMap<>();
-		// System.out.println("Words from strings : "); 
+	
 		 String currentWord;
 		 
 		 while (matcher.find()) { 
 			 	currentWord = matcher.group();
 				try {
-					count++;
-					//pageContent.add(m1.group());
-					
+					count++;						
 					if(wordMap.containsKey(currentWord))
 					{
-						wordMap.put(currentWord, wordMap.get(currentWord).intValue()+1);
+						wordMap.put(currentWord, wordMap.get(currentWord).intValue() + 1);
 					}
 					else
 					{
 						wordMap.put(currentWord,1);
 					}
-				//	System.out.println(m1.group());
 				}
 				 catch(Exception e) {
-					 //TODO
+					 System.out.println("Pattern not matched");
 				 }
 			} 
+		 
+		 System.out.println("Total words parsed: "+ count +"\n");
 		 return wordMap;
 	}
-
+	
+	/* Get Sorted Map from Unsorted Map */
 	@Override
+	public Map<String, Integer> getSortedMap(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		Map<String, Integer> result = new LinkedHashMap<>();
+		
+        map.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
+        return result;
+	}
+
+	/* Get top N words from input Map*/
+	@Override
+	public Map<String,Integer> getTopNWords(Map<String, Integer> sortedMap, Integer number) {
+		// TODO Auto-generated method stub
+		Map<String,Integer> topNWordMap = new LinkedHashMap<String,Integer>();
+		
+		for(Map.Entry<String,Integer> entry: sortedMap.entrySet()) {
+			topNWordMap.put(entry.getKey(), entry.getValue());
+		}
+		return topNWordMap;
+	}
+	
+	
+	/* To get Word List from Website content using Regex parser*/
 	public String[] getWordListUsingRegex(String inputString) {
 		// TODO Auto-generated method stub
 		
 		return  inputString.trim().split("[^a-zA-Z]+|\\s+");
 	}
 
+	/* To get Word Frequency count from List of String(Words) using stream*/
 	@Override
 	//TODO review
 	public Map<String, Integer> getWordFrequencyCount(List<String> list) {
@@ -79,11 +92,12 @@ public class WebContentOperationService implements WebContentOperationServiceInt
 	    return wordMap;
 	}
 
+	/* To get Word Frequency count from List of String(Words) using TreeMap*/
 	@Override
-	//TODO delete
-	public Map<String, Integer> getWordFrequencyCount2(List<String> list) {
+	
+	public Map<String, Integer> getWordFrequencyCountUsingMap(List<String> list) {
 		// TODO Auto-generated method stub
-		Map<String, Integer> wordMap = new HashMap<>();
+		Map<String, Integer> wordMap = new TreeMap<>();
 		int totalwords=0;
 		
 		for(String s: list) {
@@ -91,7 +105,7 @@ public class WebContentOperationService implements WebContentOperationServiceInt
 			if(count == null)
 				count=0;
 			totalwords++;
-			wordMap.put(s,count+1);
+			wordMap.put(s,count + 1);
 			
 		}
 		
@@ -99,35 +113,5 @@ public class WebContentOperationService implements WebContentOperationServiceInt
 		return wordMap;
 	}
 
-	@Override
-	public Map<String, Integer> getSortedMap(Map<String, Integer> map) {
-		// TODO Auto-generated method stub
-		Map<String, Integer> result2 = new LinkedHashMap<>();
-		
-        map.entrySet().stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .forEachOrdered(x -> result2.put(x.getKey(), x.getValue()));
-        return result2;
-	}
-
-	@Override
-	public Map<String,Integer> getTopNWords(Map<String, Integer> sortedMap, Integer number) {
-		// TODO Auto-generated method stub
-		int counter=0;
-//		Entry<String, Integer> next;
-		
-		Map<String,Integer> topNWordMap = new LinkedHashMap<String,Integer>();
-//		for(Iterator<Entry<String, Integer>> it= sortedMap.entrySet().iterator() ; it.hasNext() && counter < number;){
-//			next = it.next();
-//			topNWordMap.put(next.getKey(), next.getValue());
-//			//System.out.println(it.next());
-//			counter++;
-//		}
-		
-		for(Map.Entry<String,Integer> entry: sortedMap.entrySet()) {
-//			System.out.println();
-			topNWordMap.put(entry.getKey(), entry.getValue());
-		}
-		return topNWordMap;
-	}
+	
 }
