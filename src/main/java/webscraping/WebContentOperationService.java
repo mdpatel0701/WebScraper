@@ -1,6 +1,7 @@
 package webscraping;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,31 +20,41 @@ public class WebContentOperationService implements WebContentOperationServiceInt
 //		super();
 //		this.pageContent = pageContent;
 //	}
-//	
-//	
+	
 
 	@Override
-	public List<String> getWordList(String inputString) {
+	public Map<String,Integer> getWordList(String inputString) {
 		// TODO Auto-generated method stub
-		List<String> pageContent = new ArrayList<String>();
+		//List<String> pageContent = new ArrayList<String>();
 		 int count=0;
 		 
 		 Pattern p = Pattern.compile("[a-zA-Z]+");
-		 Matcher m1 = p.matcher(inputString);
+		 Matcher matcher = p.matcher(inputString);
+		 Map<String, Integer> wordMap = new HashMap<>();
 		// System.out.println("Words from strings : "); 
-			
+		 String currentWord;
 		 
-		 while (m1.find()) { 
+		 while (matcher.find()) { 
+			 	currentWord = matcher.group();
 				try {
 					count++;
-					pageContent.add(m1.group());
+					//pageContent.add(m1.group());
+					
+					if(wordMap.containsKey(currentWord))
+					{
+						wordMap.put(currentWord, wordMap.get(currentWord).intValue()+1);
+					}
+					else
+					{
+						wordMap.put(currentWord,1);
+					}
 				//	System.out.println(m1.group());
 				}
 				 catch(Exception e) {
-					 
+					 //TODO
 				 }
 			} 
-		 return pageContent;
+		 return wordMap;
 	}
 
 	@Override
@@ -54,6 +65,7 @@ public class WebContentOperationService implements WebContentOperationServiceInt
 	}
 
 	@Override
+	//TODO review
 	public Map<String, Integer> getWordFrequencyCount(List<String> list) {
 		// TODO Auto-generated method stub
 		Map<String, Integer> wordMap = list.parallelStream().
@@ -68,9 +80,10 @@ public class WebContentOperationService implements WebContentOperationServiceInt
 	}
 
 	@Override
+	//TODO delete
 	public Map<String, Integer> getWordFrequencyCount2(List<String> list) {
 		// TODO Auto-generated method stub
-		Map<String, Integer> wordMap = new TreeMap<>();
+		Map<String, Integer> wordMap = new HashMap<>();
 		int totalwords=0;
 		
 		for(String s: list) {
@@ -90,6 +103,7 @@ public class WebContentOperationService implements WebContentOperationServiceInt
 	public Map<String, Integer> getSortedMap(Map<String, Integer> map) {
 		// TODO Auto-generated method stub
 		Map<String, Integer> result2 = new LinkedHashMap<>();
+		
         map.entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .forEachOrdered(x -> result2.put(x.getKey(), x.getValue()));
@@ -97,13 +111,23 @@ public class WebContentOperationService implements WebContentOperationServiceInt
 	}
 
 	@Override
-	public List<String> getTopNWords(Map<String, Integer> sortedMap, Integer number) {
+	public Map<String,Integer> getTopNWords(Map<String, Integer> sortedMap, Integer number) {
 		// TODO Auto-generated method stub
 		int counter=0;
-		for(Iterator<Entry<String, Integer>> it= sortedMap.entrySet().iterator() ; it.hasNext() && counter < number;){
-			System.out.println(it.next());
-			counter++;
+//		Entry<String, Integer> next;
+		
+		Map<String,Integer> topNWordMap = new LinkedHashMap<String,Integer>();
+//		for(Iterator<Entry<String, Integer>> it= sortedMap.entrySet().iterator() ; it.hasNext() && counter < number;){
+//			next = it.next();
+//			topNWordMap.put(next.getKey(), next.getValue());
+//			//System.out.println(it.next());
+//			counter++;
+//		}
+		
+		for(Map.Entry<String,Integer> entry: sortedMap.entrySet()) {
+//			System.out.println();
+			topNWordMap.put(entry.getKey(), entry.getValue());
 		}
-		return null;
+		return topNWordMap;
 	}
 }

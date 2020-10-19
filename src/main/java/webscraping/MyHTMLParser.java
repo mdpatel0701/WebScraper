@@ -23,7 +23,7 @@ public class MyHTMLParser{
 		
 		if(isValidUrl()) {
 			try {	
-				Document doc = Jsoup.connect(this.urlString).get();
+				Document doc = Jsoup.connect(this.urlString).ignoreHttpErrors(true).get();
 				parsedContent = doc.text().toLowerCase();
 				return parsedContent;
 				

@@ -27,7 +27,7 @@ public class JsoupExample2 {
 				
 				
 		try {
-			Document doc = Jsoup.connect("ARCHIVESOCIAL.com/").get();
+			Document doc = Jsoup.connect("www.google.com").get();
 			parsedString = doc.text().toLowerCase();
 			log(parsedString); //prints content of webpage
 		} catch (IllegalArgumentException e) {
