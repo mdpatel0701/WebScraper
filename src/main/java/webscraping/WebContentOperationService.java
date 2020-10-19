@@ -61,9 +61,22 @@ public class WebContentOperationService implements WebContentOperationServiceInt
 	public Map<String,Integer> getTopNWords(Map<String, Integer> sortedMap, Integer number) {
 		// TODO Auto-generated method stub
 		Map<String,Integer> topNWordMap = new LinkedHashMap<String,Integer>();
-		
+		int counter=0;
 		for(Map.Entry<String,Integer> entry: sortedMap.entrySet()) {
-			topNWordMap.put(entry.getKey(), entry.getValue());
+			if(counter < number) {
+				topNWordMap.put(entry.getKey(), entry.getValue());
+				counter++;	
+			
+				
+				/* To get last nth valued keys from sorted Map */
+				
+//				if(counter == (number-1)) {
+//					Integer valueOfLastEntry = entry.getValue();
+//					sortedMap.entrySet().stream().filter(entry1-> valueOfLastEntry.equals(entry1.getValue()));
+//					
+//				}
+			}
+			
 		}
 		return topNWordMap;
 	}
